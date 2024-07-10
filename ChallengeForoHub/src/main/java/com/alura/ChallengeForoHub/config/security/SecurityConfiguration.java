@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    @Autowired
     private final SecurityFilter securityFilter;
 
     public SecurityConfiguration(SecurityFilter securityFilter, UserDetailsService userDetailsService) {
@@ -30,13 +32,13 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .csrf().disable()
+        return httpSecurity.csrf().disable()
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(
                                 "/login").permitAll()
                         /* Permitir Urls Swagger */
                         .requestMatchers(
+                                "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/doc/swagger-ui/**").permitAll()
                         /* Fin permitir Urls Swagger */
